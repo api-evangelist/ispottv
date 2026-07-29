@@ -1,0 +1,25 @@
+# iSpot.tv
+
+> iSpot.tv provides end-to-end measurement for TV and video advertising, unifying creative assessment, audience measurement, and outcome attribution across linear TV and streaming. Its platform draws on data from tens of millions of smart TVs and set-top boxes to track ad occurrences, impressions, creative effectiveness, and ROI. Developers can access iSpot data programmatically through the iSpot REST API (v4).
+
+## APIs
+
+- [iSpot REST API v4](https://developer.ispot.tv/api/v4): REST API to sync API activity with your database, retrieve TV/video ad measurement stats, and test API calls and endpoints.
+
+## Docs
+
+- [Developer Portal](https://developer.ispot.tv/): Documentation, quickstarts, and resources for the iSpot REST API.
+- [API Reference (v4)](https://developer.ispot.tv/api/v4): Reference for the iSpot REST API, including a Python sample and interactive API demo tool.
+
+## Product
+
+- [iSpot.tv](https://www.ispot.tv/): TV and video advertising measurement platform.
+- [Pricing](https://www.ispot.tv/pricing): Plans and pricing.
+- [Request a Demo](https://www.ispot.tv/demo): Book a product demo.
+- [Hub / Blog](https://www.ispot.tv/hub/): Thought leadership, announcements, press, case studies, and industry reports.
+
+## Legal & Trust
+
+- [Terms of Use](https://www.ispot.tv/hub/agreements/terms/)
+- [Privacy Policy](https://www.ispot.tv/hub/agreements/privacy/)
+- [Trust Center](https://trust.ispot.tv/)

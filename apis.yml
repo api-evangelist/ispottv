@@ -1,7 +1,28 @@
 aid: ispottv
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/ispottv.png
 name: iSpot.tv
-description: iSpot.tv is a company surfaced as a portfolio company of insight-partners and added to the
-  API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  iSpot.tv is a TV and video advertising measurement company that provides
+  end-to-end measurement unifying creative assessment, audience measurement,
+  and outcome attribution across linear TV and streaming. Its platform draws on
+  data from tens of millions of smart TVs and set-top boxes to track ad
+  occurrences, impressions, share of voice, creative effectiveness, and return
+  on ad spend for advertisers, agencies, and networks. iSpot exposes its data
+  programmatically through the iSpot REST API (v4), documented at a dedicated
+  developer portal with quickstarts, an API reference, a Python sample, an
+  interactive API demo tool, and release notes. iSpot.tv is backed by Insight
+  Partners and was added to the API Evangelist network from that portfolio.
 url: https://raw.githubusercontent.com/api-evangelist/ispottv/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -11,10 +32,28 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
-apis: []
+- TV Advertising
+- Advertising Measurement
+- Analytics
+- Attribution
+- Media
+- Marketing
+- Streaming
+apis:
+- name: iSpot REST API v4
+  description: >-
+    REST API for accessing iSpot.tv TV and video ad measurement data — sync API
+    activity with your database, retrieve ad occurrence and performance stats,
+    and test API calls and endpoints. Reference documentation is gated behind a
+    developer account.
+  humanURL: https://developer.ispot.tv/
+  baseURL: https://developer.ispot.tv/api/v4
+  properties:
+  - type: APIReference
+    url: https://developer.ispot.tv/api/v4
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -23,3 +62,30 @@ maintainers:
 common:
 - type: Website
   url: http://www.ispot.tv/
+- type: DeveloperPortal
+  url: https://developer.ispot.tv/
+- type: Documentation
+  url: https://developer.ispot.tv/
+- type: APIReference
+  url: https://developer.ispot.tv/api/v4
+- type: Login
+  url: https://login.ispot.tv/
+- type: Pricing
+  url: https://www.ispot.tv/pricing
+- type: Blog
+  url: https://www.ispot.tv/hub/
+- type: TermsOfService
+  url: https://www.ispot.tv/hub/agreements/terms/
+- type: PrivacyPolicy
+  url: https://www.ispot.tv/hub/agreements/privacy/
+- type: TrustCenter
+  url: https://trust.ispot.tv/
+- type: LLMsTxt
+  url: llms/ispottv-llms.txt
+- type: DomainSecurity
+  url: security/ispottv-domain-security.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

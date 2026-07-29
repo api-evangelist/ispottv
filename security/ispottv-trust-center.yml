@@ -1,0 +1,16 @@
+generated: '2026-07-19'
+method: searched
+probe: true
+source: https://www.ispot.tv/ (homepage footer link) + https://trust.ispot.tv/
+url: https://trust.ispot.tv/
+# trust.ispot.tv is a live, dedicated trust-center subdomain linked from the iSpot.tv
+# homepage footer. The portal returns HTTP 403 to automated clients, so named
+# certifications (SOC 2 / ISO 27001 / etc.) could not be captured verbatim and are
+# intentionally left empty rather than fabricated.
+certifications: []
+evidence:
+  - source: https://www.ispot.tv/
+    keywords: [trust center, security]
+  - source: https://trust.ispot.tv/
+    status: 403
+    note: dedicated trust-center subdomain resolves; body gated to automated clients
