@@ -32,7 +32,7 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-19'
+modified: '2026-08-13'
 tags:
 - Company
 - TV Advertising
@@ -45,15 +45,59 @@ tags:
 apis:
 - name: iSpot REST API v4
   description: >-
-    REST API for accessing iSpot.tv TV and video ad measurement data — sync API
-    activity with your database, retrieve ad occurrence and performance stats,
-    and test API calls and endpoints. Reference documentation is gated behind a
-    developer account.
+    REST API for accessing iSpot.tv TV and video ad measurement data — airing
+    occurrence, estimated spend, household and person-level impressions,
+    attention metrics, OTT/streaming impressions, TV conversion attribution and
+    lift, plus the reference entities behind them (spots, creatives, brands,
+    industries, networks, shows, episodes, products). OAuth 2.0 client
+    credentials; JSON responses with a data + meta envelope, bracketed
+    filter[]/page[] parameters and comma-separated include expansion; errors are
+    RFC 9457 application/problem+json. Per-endpoint rate limits are published.
+    The full endpoint reference and the interactive API demo are gated behind a
+    developer-site account, but the conventions, filters, rate limits, changelog
+    and Python samples are public.
   humanURL: https://developer.ispot.tv/
-  baseURL: https://developer.ispot.tv/api/v4
+  baseURL: https://api.ispot.tv/v4
+  x-base-url-note: >-
+    baseURL corrected 2026-08-13 from https://developer.ispot.tv/api/v4 (the gated
+    API-reference page on the developer portal, which returns HTTP 401 HTML) to
+    https://api.ispot.tv/v4, the host iSpot names in its own public docs — the
+    Python sample at developer.ispot.tv/documentation/python/base-template, the
+    API Integration Guide PDF, the glossary and every example URL on the
+    best-practices pages. Probed: https://api.ispot.tv/v4/brands returns HTTP 401
+    application/problem+json and https://api.ispot.tv/v4/oauth2/token returns a
+    live OAuth 2.0 error, confirming the API host.
   properties:
   - type: APIReference
     url: https://developer.ispot.tv/api/v4
+  - type: Authentication
+    url: authentication/ispottv-authentication.yml
+  - type: Conventions
+    url: conventions/ispottv-conventions.yml
+  - type: ErrorCatalog
+    url: errors/ispottv-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/ispottv-rate-limits.yml
+  - type: DataModel
+    url: data-model/ispottv-data-model.yml
+- name: iSpot Impression & TV Conversion Pixel API v2
+  description: >-
+    Server-side and client-side measurement ingest endpoints. A 1x1 GIF pixel
+    accepts OTT/CTV/digital impression events (pi.ispot.tv) and TV conversion
+    events (pt.ispot.tv) keyed by a client-specific tracking code in the form
+    TC-####-#, with campaign, channel, creative, placement, device, publisher and
+    segment passed as query parameters. Server-side callers re-create the browser
+    context via X-Forwarded-For, User-Agent and a datetime query parameter. A
+    separate staging host (staging-pi.ispot.tv) is used for QA before production.
+  humanURL: https://developer.ispot.tv/documentation/unified-measurement
+  baseURL: https://pi.ispot.tv/v2
+  properties:
+  - type: Documentation
+    url: https://developer.ispot.tv/documentation/unified-measurement
+  - type: Components
+    url: components/ispottv-components.yml
+  - type: Sandbox
+    url: sandbox/ispottv-sandbox.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -65,11 +109,17 @@ common:
 - type: DeveloperPortal
   url: https://developer.ispot.tv/
 - type: Documentation
-  url: https://developer.ispot.tv/
+  url: https://developer.ispot.tv/documentation/api
 - type: APIReference
   url: https://developer.ispot.tv/api/v4
+- type: GettingStarted
+  url: https://developer.ispot.tv/quickstarts/api
 - type: Login
   url: https://login.ispot.tv/
+- type: Support
+  url: https://www.ispot.tv/contact-us
+- type: GitHubOrganization
+  url: https://github.com/ispot-tv
 - type: Pricing
   url: https://www.ispot.tv/pricing
 - type: Blog
@@ -84,8 +134,36 @@ common:
   url: llms/ispottv-llms.txt
 - type: DomainSecurity
   url: security/ispottv-domain-security.yml
+- type: StatusPage
+  url: https://status.ispot.tv
+- type: ChangeLog
+  url: https://developer.ispot.tv/releases/api/v4/notes
+- type: ChangeLog
+  url: changelog/ispottv-changelog.yml
+- type: Authentication
+  url: authentication/ispottv-authentication.yml
+- type: Conventions
+  url: conventions/ispottv-conventions.yml
+- type: ErrorCatalog
+  url: errors/ispottv-problem-types.yml
+- type: RateLimits
+  url: rate-limits/ispottv-rate-limits.yml
+- type: Lifecycle
+  url: lifecycle/ispottv-lifecycle.yml
+- type: Plans
+  url: plans/ispottv-plans-pricing.yml
+- type: Conformance
+  url: conformance/ispottv-conformance.yml
+- type: DataModel
+  url: data-model/ispottv-data-model.yml
+- type: Packages
+  url: packages/ispottv-packages.yml
+- type: Components
+  url: components/ispottv-components.yml
+- type: Sandbox
+  url: sandbox/ispottv-sandbox.yml
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 13
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
