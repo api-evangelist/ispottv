@@ -1,0 +1,61 @@
+generated: '2026-08-13'
+method: searched
+source: https://www.ispot.tv/pricing
+plan_count: 0
+pricing_model: enterprise-sales-only
+currency: null
+note: >-
+  iSpot publishes no plans, tiers, list prices or usage rates. https://www.ispot.tv/pricing
+  is a lead-capture page whose entire body is a "Get a free demo today" form —
+  work email, name, phone, company, job function, seniority, industry, advertiser
+  name and an Annual TV Ad Spend band ($100m+ / $50-100m / $15-50m / <$15m / not
+  currently advertising) — plus a customer quote. There is no price, no unit, no
+  free tier and no self-service sign-up anywhere on the site.
+plans: []
+qualification_signals:
+  note: >-
+    The pricing form segments prospects by annual TV ad spend, which is the
+    closest thing iSpot publishes to a pricing dimension.
+  annual_tv_ad_spend_bands:
+  - $100m+
+  - $50-100m
+  - $15-50m
+  - <$15m
+  - Not Currently Advertising
+api_entitlement:
+  self_service: false
+  detail: >-
+    API access is not purchasable or provisionable online. OAuth Client ID and
+    Client Secret are created by an iSpot account manager / Customer Success
+    representative, and API entitlement follows the customer's subscription —
+    account access is scoped to the brands and industries in the contract, which
+    the caller discovers at runtime via filter[access]=1.
+  source: https://developer.ispot.tv/documentation/api/brands-identification
+add_ons_named_in_docs:
+  note: >-
+    The docs name products a customer must be separately subscribed to before the
+    matching endpoints return data. These are entitlement gates, not published
+    prices.
+  items:
+  - name: TV Conversions
+    gate: Subscription required for /v4/metrics/conversions/{TC-id}
+  - name: Unified Measurement / OTT
+    gate: Pixel implementation plus subscription
+  - name: Streaming Competitive
+    gate: Data available from 2023-03-20
+  - name: Streaming Verification
+    gate: Separate module
+  - name: Advanced Audiences
+    gate: Permissioning controls added in v4.36.1
+  - name: Integrated User Level Data (IULD)
+    gate: Not available via the REST API at all; separate access request
+contact:
+  demo: https://www.ispot.tv/demo
+  sales: https://www.ispot.tv/contact-us
+x-evidence:
+- url: https://www.ispot.tv/pricing
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://www.ispot.tv/demo
+  http_status: 200
+  fetched: '2026-08-13'

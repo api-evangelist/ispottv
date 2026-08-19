@@ -1,0 +1,274 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.ispot.tv/documentation/api/best_practices/spot_metadata_downloads
+also:
+- https://developer.ispot.tv/documentation/api/brands-identification
+- https://developer.ispot.tv/documentation/api/best_practices/filter-includes
+- https://developer.ispot.tv/documentation/glossary
+note: >-
+  iSpot publishes no OpenAPI, so this graph is NOT derived from a spec. It is
+  read from iSpot's own public documentation — the `include` value list (which is
+  the relationship surface of a JSON:API-style compound document), the
+  spot-metadata and brand-identification best-practice pages, the v3-to-v4 field
+  mapping, and the glossary. Every entity and edge below is named by iSpot in
+  those pages. Cardinalities marked `inferred` are read from prose ("spots have a
+  child/parent relationship") rather than stated formally.
+domain: TV and streaming advertising measurement
+id_convention:
+  default: opaque integer, iSpot-specific, stable across endpoints
+  exception:
+    entity: TrackingCode
+    format: TC-{account_id}-{site_index}
+    example: TC-1234-1
+    note: >-
+      The only prefixed identifier iSpot publishes. It doubles as the pixel path
+      segment (pi/pt.ispot.tv/v2/TC-####-#.gif) and as the path parameter on the
+      conversions read API (/v4/metrics/conversions/TC-####-#).
+entities:
+- name: Industry
+  endpoint: /v4/industries
+  description: Top-level advertiser vertical.
+  self_referencing: true
+  includes: [brand, parent]
+- name: Brand
+  endpoint: /v4/brands
+  description: >-
+    The advertiser brand. Brands nest — a brand with no parent in the response is
+    itself a parent brand or a standalone brand.
+  self_referencing: true
+  includes: [industry, parent]
+  access_filter: 'filter[access]=1 returns only the brands the caller is entitled to'
+- name: Product
+  endpoint: /v4/products
+  includes: [brand, industry, product]
+  filters: ['filter[product]', 'filter[product_type]=primary|secondary|competitive']
+- name: ProductCategory
+  endpoint: /v4/product-categories
+  includes: [brand, industry, product]
+- name: Spot
+  endpoint: /v4/spots
+  aliases: [ad]
+  description: >-
+    The advertisement itself — "ads data is called spots in the iSpot REST API".
+    A spot is the parent; a creative is a child variation. When there is no
+    child, creative id and spot id are identical.
+  includes: [children, parent, type, events, products, brand, airing_summary, airing_parent_summary]
+  sub_resources:
+  - path: /v4/spots/{id}
+  - path: /v4/spots/{id}/download
+    media: MP4
+    restrictions:
+    - Accounts with global (all-brand) access may only download ads with airings in the last 7 days.
+    - Only National and Regional ads are downloadable.
+    - Local ads for National brands are also downloadable.
+  - path: /v4/spots/updates
+  - path: /v4/spots/extended
+  - path: /v4/spots/actives
+  - path: /v4/spots/new
+  types:
+    filter: 'filter[spot_type]'
+    values:
+      '1': Commercial
+      '2': Show Promo
+      '3': Movie Trailer
+      '4': Infomercial
+      '5': Public Service Announcement
+      '6': Network Movie Promo
+- name: Creative
+  description: A child variation of a Spot.
+  filters: ['filter[creative]']
+  includes: [creative]
+- name: Airing
+  endpoint: /v4/airings
+  description: One occurrence of a spot on a network at a point in time.
+  sub_resources:
+  - path: /v4/airings/updates
+    description: >-
+      Restatement feed — reports additions, corrections and deletions with old
+      and new values over a datetime window.
+  types:
+    filter: 'filter[airing_type]'
+    values:
+      N: National
+      L: Local
+      SC: Spot cable
+      NS: National satellite
+      R: Regional (NFL games only)
+- name: Network
+  endpoint: /v4/networks
+  sub_resources:
+  - path: /v4/networks/family
+  - path: /v4/networks/family/extended
+    filters: ['filter[network_family]', 'filter[advertiser_id]', 'filter[start_date]', 'filter[end_date]', 'filter[is_parent]']
+- name: Show
+  endpoint: /v4/shows
+  includes: [genre, sub_genre]
+- name: Episode
+  endpoint: /v4/episodes
+  sub_resources:
+  - path: /v4/episodes/{id}
+  added_in: v4.25.3 (2022-10-21)
+- name: Genre
+  includes: [genre, sub_genre]
+- name: Publisher
+  description: Streaming/OTT publisher an impression was served on.
+  includes: [publisher]
+- name: Celebrity
+  endpoint: /v4/celebrities
+- name: Movie
+  endpoint: /v4/movies
+- name: Event
+  endpoint: /v4/events
+- name: TrackingCode
+  aliases: [Site ID, Pixel ID]
+  format: TC-####-#
+  description: >-
+    Per-site conversion/impression tracking identifier tied to the customer's
+    primary TV brand.
+- name: Account
+  endpoint: /v4/account
+- name: User
+  endpoint: /v4/users
+- name: Access
+  endpoint: /v4/access
+  description: Entitlement surface — which brands/industries the caller may read.
+- name: Notification
+  endpoint: /v4/notifications
+relationships:
+- from: Brand
+  to: Industry
+  type: belongs_to
+  via: industry
+  evidence: 'include=industry on /v4/brands'
+- from: Brand
+  to: Brand
+  type: belongs_to
+  via: parent
+  label: parent brand
+  evidence: 'include=parent; brand.parent dotted include'
+- from: Industry
+  to: Industry
+  type: belongs_to
+  via: parent
+  evidence: 'industry.parent dotted include'
+- from: Spot
+  to: Brand
+  type: belongs_to
+  via: brand
+  evidence: 'include=brand on /v4/spots'
+- from: Spot
+  to: Spot
+  type: has_many
+  via: children
+  label: creatives
+  evidence: >-
+    "iSpot ads have a child and parent relationship where the child (creative) is
+    a slight variation of the parent (spot)"
+- from: Spot
+  to: Product
+  type: has_many
+  via: products
+- from: Spot
+  to: Event
+  type: has_many
+  via: events
+- from: Airing
+  to: Spot
+  type: belongs_to
+  via: spot
+- from: Airing
+  to: Creative
+  type: belongs_to
+  via: creative
+- from: Airing
+  to: Network
+  type: belongs_to
+  via: network
+- from: Airing
+  to: Episode
+  type: belongs_to
+  via: episode
+- from: Airing
+  to: Show
+  type: belongs_to
+  via: show
+  cardinality_source: inferred
+- from: Episode
+  to: Show
+  type: belongs_to
+  via: show
+  cardinality_source: inferred
+- from: Show
+  to: Genre
+  type: belongs_to
+  via: genre
+- from: Show
+  to: Genre
+  type: belongs_to
+  via: sub_genre
+- from: Product
+  to: Brand
+  type: belongs_to
+  via: brand
+- from: Product
+  to: ProductCategory
+  type: belongs_to
+  via: product
+  cardinality_source: inferred
+- from: TrackingCode
+  to: Brand
+  type: belongs_to
+  via: primary TV brand
+  evidence: >-
+    "This ID is tied to your primary TV brand, so all TV impressions and matched
+    conversions will be filtered appropriately in the response."
+metric_surfaces:
+  note: >-
+    The /v4/metrics/* family is not a set of entities but projections over the
+    graph above. iSpot documents them as ADDITIVE — each wider surface returns
+    the narrower one plus its own metrics.
+  additive_chain:
+  - '/v4/metrics/tv/airings — airing level: time, spot, network, est_spend'
+  - '/v4/metrics/audience/airings = tv/airings + impressions'
+  - '/v4/metrics/attention/airings = audience/airings + attention metrics'
+  - '/v4/metrics/conversions/{TC-####-#}/airings = audience/airings + conversion metrics'
+  granularity_note: >-
+    'airings' in each path may be swapped for 'spots' or 'networks' for coarser
+    granularity.
+  other_surfaces:
+  - /v4/metrics/competitive/{dimension}..{dimension}
+  - /v4/metrics/verified/audience
+  - /v4/metrics/verified/continuous-play
+  - /v4/metrics/ott
+  - /v4/metrics/ott/conversions
+  - /v4/metrics/ott/{site_id}/lift/publisher
+  - /v4/metrics/ott/{site_id}/lift/summary
+  - /v4/metrics/conversions/{id}/lift/availability
+  - /v4/metrics/conversions/{id}/types
+  - /v4/metrics/conversions/{id}/custom-data
+  - /v4/metrics/attention/dates
+  - /v4/metrics/impressions/ott
+  - /v4/planning
+  grouping:
+    param: 'filter[group_by]'
+    values:
+      I: Industry
+      P: Parent Brand
+      B: Brand
+      A: Spot
+      C: Creative
+      N: Network
+      S: Show
+      E: Episode
+      H: Schedule
+      W: Day of Week
+      D: Day Part
+      T: Date (EST, DST-aware)
+      M: Month
+      K: Week
+      G: Sub-Genre
+      F: Genre
+      R: Duration
+      Y: Delta Date
+render: null
+render_note: No subway/ or ERD render exists in this repo yet.

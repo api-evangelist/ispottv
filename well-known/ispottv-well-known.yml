@@ -1,0 +1,72 @@
+generated: '2026-08-13'
+method: probed
+source: live GET probes of every iSpot host, 2026-08-13
+result: no-documents
+note: >-
+  Every /.well-known/ path was probed on all four iSpot hosts and NOTHING was
+  served. This file records an absence, not a presence — no WellKnown, SecurityTxt
+  or AgentCard pointer is emitted in apis.yml. Note the login.ispot.tv rows: that
+  host is a single-page app whose catch-all answers HTTP 200 with the same HTML
+  shell for every path, including paths that cannot exist. A 200 that returns an
+  SPA shell is not a document and is recorded as a miss.
+hosts:
+- host: https://www.ispot.tv
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+- host: https://developer.ispot.tv
+  documents:
+  - {path: /.well-known/security.txt, status: 403, note: nginx 403, no document}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+- host: https://api.ispot.tv
+  note: >-
+    The API edge answers every path outside the /v4 route prefix with a bare
+    text/plain 503 and no body. Inside /v4 it answers RFC 9457 problem+json, so
+    the 503s below are an edge behaviour rather than a routed 404.
+  documents:
+  - {path: /.well-known/security.txt, status: 503}
+  - {path: /.well-known/openid-configuration, status: 503}
+  - {path: /.well-known/oauth-authorization-server, status: 503}
+  - {path: /.well-known/oauth-protected-resource, status: 503}
+  - {path: /.well-known/api-catalog, status: 503}
+  - {path: /.well-known/ai-plugin.json, status: 503}
+  - {path: /.well-known/agent-card.json, status: 503}
+  - {path: /.well-known/agent.json, status: 503}
+- host: https://login.ispot.tv
+  note: >-
+    SPA catch-all. All eight paths return HTTP 200 with an identical text/html
+    single-page-app shell. FALSE POSITIVE — treated as a miss on every path.
+  documents:
+  - {path: /.well-known/security.txt, status: 200, content_type: text/html, document: false, reason: spa-shell}
+  - {path: /.well-known/openid-configuration, status: 200, content_type: text/html, document: false, reason: spa-shell}
+  - {path: /.well-known/oauth-authorization-server, status: 200, content_type: text/html, document: false, reason: spa-shell}
+  - {path: /.well-known/oauth-protected-resource, status: 200, content_type: text/html, document: false, reason: spa-shell}
+  - {path: /.well-known/api-catalog, status: 200, content_type: text/html, document: false, reason: spa-shell}
+  - {path: /.well-known/ai-plugin.json, status: 200, content_type: text/html, document: false, reason: spa-shell}
+  - {path: /.well-known/agent-card.json, status: 200, content_type: text/html, document: false, reason: spa-shell}
+  - {path: /.well-known/agent.json, status: 200, content_type: text/html, document: false, reason: spa-shell}
+summary:
+  documents_found: 0
+  security_txt: false
+  oauth_metadata: false
+  oidc_discovery: false
+  api_catalog: false
+  agent_card: false
+gap:
+  note: >-
+    iSpot runs a real OAuth 2.0 authorization server at
+    https://api.ispot.tv/v4/oauth2/token but publishes no RFC 8414
+    oauth-authorization-server metadata for it, so a client cannot discover the
+    token endpoint programmatically — only by reading a PDF.

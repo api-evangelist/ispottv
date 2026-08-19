@@ -1,0 +1,271 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.ispot.tv/documentation/api/best_practices
+docs:
+- https://developer.ispot.tv/documentation/api/best_practices/filter-includes
+- https://developer.ispot.tv/documentation/python/base-template
+- https://developer.ispot.tv/documentation/glossary
+- https://developer.ispot.tv/sites/default/files/iSpot_API_Integration_Guide_2023-compressed.pdf
+api: iSpot REST API v4
+base_url: https://api.ispot.tv/v4
+
+authentication:
+  style: oauth2-client-credentials-bearer
+  detail: authentication/ispottv-authentication.yml
+
+versioning:
+  scheme: uri-path
+  current: v4
+  path_prefix: /v4
+  header:
+    name: iSpot-Version
+    style: date-stamped
+    request_example: '2017-08-16'
+    response_header: ispot-version
+    response_observed: '2024-09-10'
+    note: >-
+      iSpot's published samples pin a date-stamped version via the iSpot-Version
+      request header; the API echoes an ispot-version response header. This is a
+      dual scheme — a major version in the path plus a date pin in the header.
+  release_train: semver-ish (v4.MINOR.PATCH), see changelog/ispottv-changelog.yml
+
+pagination:
+  style: page-number
+  family: JSON:API-flavored bracket syntax
+  params:
+  - name: page[number]
+    description: 1-indexed page number.
+  - name: page[size]
+    description: Values per page.
+    default: 100
+    max: 1000
+    exception: >-
+      The airings endpoints accept page[size] up to 10000; iSpot's own dashboard-
+      equivalent examples use page[size]=10000.
+  response_location: meta.pagination
+  response_fields:
+  - total
+  - count
+  - per_page
+  - current_page
+  - total_pages
+  - links.previous
+  - links.next
+  example: >-
+    https://api.ispot.tv/v4/metrics/tv/airings?page[number]=3&page[size]=10&filter[start_date]=2019-01-01&filter[end_date]=2019-01-07&sort=est_spend,-date
+
+filtering:
+  style: bracketed filter parameters
+  syntax: 'filter[<field>]=<value>'
+  multi_value: Comma-separated lists are accepted on numeric-id filters.
+  date_format: 'YYYY-MM-DD or full ISO 8601 (YYYY-MM-DDThh:mm:ssZ)'
+  common_filters:
+  - filter[start_date]
+  - filter[end_date]
+  - filter[industry]
+  - filter[network]
+  - filter[brand]
+  - filter[parent_brand]
+  - filter[spot]
+  - filter[creative]
+  - filter[show]
+  - filter[product]
+  - filter[airing]
+  - filter[id]
+  - filter[access]
+  - filter[language]
+  - filter[product_type]
+  - filter[spot_type]
+  - filter[airing_type]
+  - filter[national_only]
+  - filter[group_by]
+  enumerated_values:
+    filter[airing_type]:
+      N: National
+      L: Local
+      SC: Spot cable
+      NS: National satellite
+      R: Regional (NFL games only)
+    filter[spot_type]:
+      '1': Commercial
+      '2': Show Promo
+      '3': Movie Trailer
+      '4': Infomercial
+      '5': Public Service Announcement
+      '6': Network Movie Promo
+    filter[language]: en, es
+    filter[product_type]: primary, secondary, competitive
+  conversion_filters:
+  - name: filter[conversion_application]
+    values: WEB, APP
+    default: All
+  - name: filter[conversion_type]
+    values: alphanumeric
+    default: All
+  - name: filter[conversion_custom_data_tag]
+    values: alphanumeric (preferred) or number
+    default: All
+  - name: filter[conversion_attribution_window]
+    values: 1d, 7d, 14d, 30d
+    default: 14d
+  - name: filter[use_attribution_window]
+    values: '0, 1'
+    default: '0'
+  source: https://developer.ispot.tv/documentation/api/best_practices/filter-includes
+
+field_expansion:
+  style: include
+  param: include
+  syntax: comma-separated list
+  values:
+  - industry
+  - brand
+  - parent_brand
+  - episode
+  - show
+  - genre
+  - sub_genre
+  - network
+  - day_part
+  - day_of_week
+  - spot
+  - creative
+  - product
+  - publisher
+  - children
+  - parent
+  - type
+  - events
+  - products
+  - airing_summary
+  - airing_parent_summary
+  - brand.parent
+  - industry.parent
+  note: >-
+    Dotted paths (brand.parent, industry.parent) traverse one relationship level.
+    The include parameter is the primary compound-document mechanism; there is no
+    separate sparse-fieldset parameter.
+
+metrics_toggles:
+  style: bracketed metric group flags
+  syntax: 'metrics[<group>]=1'
+  values:
+  - metrics[include_airings]
+  - metrics[include_audience]
+  - metrics[include_audience_attention]
+  - metrics[require_airings]
+  note: >-
+    iSpot endpoints are additive — audience/airings returns tv/airings plus
+    impressions; attention/airings returns audience/airings plus attention
+    metrics; conversions/{TC-id}/airings returns audience/airings plus conversion
+    metrics. Prefer the widest endpoint over multiple calls.
+  source: https://developer.ispot.tv/documentation/api/best_practices/efficient_endpoints
+
+sorting:
+  param: sort
+  syntax: comma-separated field list; prefix '-' for descending
+  default_direction: ascending
+  example: sort=est_spend,-date
+  fields_observed:
+  - id
+  - name
+  - brand_name
+  - impressions
+  - airing_date
+  - airing_date_et
+  - airing_date_pt
+  - est_spend
+  - date
+  - week
+  - month
+  - day_of_week
+  - day_part
+  - conversions
+  - conversions_matched
+  - conversions_tv_population
+  - conversion_rate
+  - conversion_rate_matched
+  - conversion_rate_tv_population
+  - publisher
+  - impressions_ott
+
+response_envelope:
+  content_type: application/json
+  data_key: data
+  meta_key: meta
+  note: >-
+    Successful responses carry a `data` array/object plus a `meta` block holding
+    pagination. Errors switch to application/problem+json (see below).
+
+error_envelope:
+  format: rfc9457
+  content_type: application/problem+json
+  fields:
+  - title
+  - type
+  - status
+  - detail
+  - instance
+  instance_is_request_id: true
+  detail: errors/ispottv-problem-types.yml
+
+request_tracing:
+  header: x-request-id
+  direction: response
+  note: >-
+    Every response carries an x-request-id header; iSpot's own Python sample
+    reads it as X-Request-ID and prints it alongside the Date header. The same
+    value appears as `instance` in problem+json error bodies, so an error is
+    self-identifying for support.
+  verified: probed
+  source: https://developer.ispot.tv/documentation/python/base-template
+
+rate_limit_signaling:
+  documented_headers:
+  - maximum requests permitted per minute
+  - requests remaining in the current window
+  - seconds (UTC) until the window resets
+  header_names_published: false
+  header_names_note: >-
+    iSpot describes the three rate-limit response headers in prose but does not
+    publish their exact names on any public page, and they are not observable on
+    an unauthenticated request. An agent cannot bind to them without credentials.
+  exhaustion_status: 429
+  detail: rate-limits/ispottv-rate-limits.yml
+
+idempotency:
+  supported: false
+  note: >-
+    No idempotency key, header or retry-safety contract is documented anywhere on
+    the public developer surface. The v4 REST API is read-oriented (GET
+    measurement queries); the write surface is the measurement pixel, which is a
+    fire-and-forget GIF request with no dedupe token. No Idempotency pointer is
+    emitted for this provider.
+
+caching:
+  note: >-
+    Responses carry 'cache-control: no-cache, private'. The changelog records a
+    server-side caching change in v4.47.0 (Aug 2025) but no client cache contract
+    (ETag / Last-Modified) is published.
+  verified: probed
+
+data_freshness:
+  airings_refresh: 3x daily (approx. noon, 5PM and midnight PST)
+  restatement_window: >-
+    Airings data is restated; iSpot recommends a rolling 30-day window and the
+    /v4/airings/updates endpoint to pick up additions, corrections and deletions.
+    Impressions can still attach to an airing up to 30 days after its airing date,
+    though numbers rarely move after 3 days.
+  history:
+    tv_airings_from: '2012'
+    impressions_from: '2016'
+    attention_from: '2018'
+  source: https://developer.ispot.tv/documentation/api/best_practices/data-availability
+
+cross_links:
+  errors: errors/ispottv-problem-types.yml
+  lifecycle: lifecycle/ispottv-lifecycle.yml
+  authentication: authentication/ispottv-authentication.yml
+  rate_limits: rate-limits/ispottv-rate-limits.yml
+  data_model: data-model/ispottv-data-model.yml
+  changelog: changelog/ispottv-changelog.yml

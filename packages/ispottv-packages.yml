@@ -1,0 +1,88 @@
+generated: '2026-08-13'
+method: searched
+source: public package-registry lookups + https://developer.ispot.tv/quickstarts/api
+package_count: 0
+official_package_count: 0
+note: >-
+  iSpot advertises a Python SDK ("We provide a python SDK to access to our REST
+  API" on the public quickstarts page) but does not publish it to any public
+  registry. The SDK download page, /code/pypi, returns HTTP 401 — it sits behind
+  the credentialed developer site. No first-party client library is installable
+  by the public, so no SDKs pointer is emitted.
+packages: []
+registries_searched:
+- registry: pypi
+  endpoint: https://pypi.org/pypi/<name>/json
+  names_tried: [ispot, ispottv, ispot-tv, ispot-api, ispottv-api, ispot-sdk]
+  result: 404 on every name
+- registry: npm
+  endpoint: https://registry.npmjs.org/<name>
+  names_tried: [ispot, ispottv, ispot-tv, '@ispot/sdk', ispot-api]
+  result: 404 on every name
+- registry: rubygems
+  endpoint: https://rubygems.org/api/v1/gems/ispot.json
+  result: 404
+- registry: github
+  endpoint: https://github.com/ispot-tv
+  result: >-
+    Org exists with 11 public repositories, none of them an iSpot API client.
+    The set is infrastructure and forked front-end utilities — CRDs-catalog,
+    terraform-aws-mwaa, terraform-aws-cur, sass-lint-auto-fix, querystring,
+    chosen.js-modified, bootstrap-tabdrop, placeholder, jquery.fixme,
+    jquery.inview, canvas-toBlob.js. Most were last pushed 2017-2019; the newest
+    activity is Jan 2025.
+gated_first_party:
+- name: iSpot Python SDK
+  language: python
+  registry: null
+  version: null
+  published: null
+  official: true
+  public: false
+  url: https://developer.ispot.tv/code/pypi
+  http_status: 401
+  install: null
+  note: >-
+    Named on the public quickstarts page but the resource itself is
+    credential-gated (HTTP 401). Version and release date are unknown because
+    there is no registry entry to query and the page cannot be read — recorded
+    null rather than guessed. If it is distributed as a private PyPI package,
+    consumers outside the customer base cannot pin or audit it.
+public_code_samples:
+- name: Python base template
+  url: https://developer.ispot.tv/documentation/python/base-template
+  http_status: 200
+  description: >-
+    Complete, working script — client_credentials token mint, an
+    /v4/metrics/audience/airings query with filters and includes, X-Request-ID
+    capture, meta.pagination-driven paging, and CSV output via pandas
+    json_normalize. This is the most useful public integration artifact iSpot
+    ships.
+  official: true
+- name: Python script for OTT conversions
+  url: https://developer.ispot.tv/documentation/python/ott-conversions
+  http_status: 200
+  description: Returns conversion data by placement, creative and publisher.
+  official: true
+recommended_clients_named_by_provider:
+- python
+- curl
+- Postman
+- Insomnia
+recommended_clients_note: >-
+  iSpot names these as suggested HTTP clients in its Integration Guide. It does
+  NOT publish a Postman collection or workspace, so no Postman pointer is
+  emitted.
+x-evidence:
+- url: https://developer.ispot.tv/quickstarts/api
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://developer.ispot.tv/code/pypi
+  http_status: 401
+  fetched: '2026-08-13'
+- url: https://pypi.org/pypi/ispot/json
+  http_status: 404
+  fetched: '2026-08-13'
+- url: https://registry.npmjs.org/ispottv
+  http_status: 404
+  fetched: '2026-08-13'

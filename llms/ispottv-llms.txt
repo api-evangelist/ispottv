@@ -1,25 +1,87 @@
 # iSpot.tv
 
-> iSpot.tv provides end-to-end measurement for TV and video advertising, unifying creative assessment, audience measurement, and outcome attribution across linear TV and streaming. Its platform draws on data from tens of millions of smart TVs and set-top boxes to track ad occurrences, impressions, creative effectiveness, and ROI. Developers can access iSpot data programmatically through the iSpot REST API (v4).
+> iSpot.tv provides end-to-end measurement for TV and video advertising, unifying creative assessment, audience measurement, and outcome attribution across linear TV and streaming. Its platform draws on data from tens of millions of smart TVs and set-top boxes to track ad occurrences, impressions, creative effectiveness, and ROI. Developers read that data through the iSpot REST API v4 at https://api.ispot.tv/v4, and feed off-linear exposure and conversion events back in through the measurement pixel at https://pi.ispot.tv/v2 and https://pt.ispot.tv/v2.
 
 ## APIs
 
-- [iSpot REST API v4](https://developer.ispot.tv/api/v4): REST API to sync API activity with your database, retrieve TV/video ad measurement stats, and test API calls and endpoints.
+- [iSpot REST API v4](https://api.ispot.tv/v4): Read API for TV, streaming, attention and conversion measurement. OAuth 2.0 client credentials. JSON responses with a `data` + `meta` envelope; errors are RFC 9457 `application/problem+json`.
+- [iSpot Impression & TV Conversion Pixel v2](https://developer.ispot.tv/documentation/unified-measurement): Ingest surface. 1x1 GIF pixels keyed by a `TC-####-#` tracking code, with client-side and server-side modes.
+
+## Authentication
+
+- Token endpoint: `POST https://api.ispot.tv/v4/oauth2/token` with `client_id`, `client_secret`, `grant_type=client_credentials`, sent as `application/x-www-form-urlencoded`.
+- Send the token as `Authorization: Bearer <token>`. Tokens are valid for 24 hours; do not mint a new one before the current one expires.
+- Optional `iSpot-Version` request header pins a dated API version. Responses echo `ispot-version` and `x-request-id`.
+- There are no OAuth scopes. Authorization is account-scoped — call `/v4/brands?filter[access]=1` and `/v4/industries?filter[access]=1` to discover what the credential may read.
+- Credentials are issued by an iSpot account manager. There is no self-service sign-up, and API credentials are not interchangeable with developer-site or dashboard logins.
+
+## Request conventions
+
+- Filter: `filter[start_date]`, `filter[end_date]`, `filter[brand]`, `filter[industry]`, `filter[network]`, `filter[spot]`, `filter[creative]`, `filter[airing_type]`, `filter[national_only]`, `filter[group_by]`. Dates are `YYYY-MM-DD` or full ISO 8601.
+- Expand: `include=industry,brand,episode,show,genre,sub_genre,network,day_part,day_of_week` (dotted paths `brand.parent`, `industry.parent` are supported).
+- Paginate: `page[number]` and `page[size]` (default 100, max 1000; airings endpoints accept 10000). Pagination lives at `meta.pagination` with `total`, `count`, `per_page`, `current_page`, `total_pages` and `links.previous`/`links.next`.
+- Sort: `sort=est_spend,-date` — prefix `-` for descending.
+- Metric groups: `metrics[include_airings]=1`, `metrics[include_audience]=1`, `metrics[include_audience_attention]=1`.
+- Endpoints are additive: `audience/airings` = `tv/airings` + impressions; `attention/airings` = `audience/airings` + attention; `conversions/{TC-id}/airings` = `audience/airings` + conversions. Prefer one wide call over several narrow ones.
+- No idempotency contract is published.
+
+## Core endpoints
+
+- `/v4/metrics/tv/airings`, `/v4/metrics/audience/airings`, `/v4/metrics/attention/airings` — airing-level spend, impressions and attention.
+- `/v4/metrics/conversions/{TC-####-#}` and `/v4/metrics/conversions/{TC-####-#}/airings` — TV conversion attribution.
+- `/v4/metrics/ott`, `/v4/metrics/ott/conversions`, `/v4/metrics/impressions/ott`, `/v4/metrics/ott/{site_id}/lift/publisher` — unified measurement / OTT.
+- `/v4/metrics/competitive/{dim}..{dim}` — Streaming Competitive.
+- `/v4/metrics/verified/audience`, `/v4/metrics/verified/continuous-play` — Streaming Verification.
+- `/v4/spots`, `/v4/spots/{id}`, `/v4/spots/{id}/download` (MP4), `/v4/spots/updates`, `/v4/spots/extended`, `/v4/spots/actives`, `/v4/spots/new`.
+- `/v4/airings/updates` — restatement feed with old and new values.
+- `/v4/brands`, `/v4/industries`, `/v4/products`, `/v4/product-categories`, `/v4/networks`, `/v4/networks/family/extended`, `/v4/shows`, `/v4/episodes`, `/v4/celebrities`, `/v4/movies`, `/v4/events`, `/v4/planning`, `/v4/account`, `/v4/users`, `/v4/access`, `/v4/notifications`.
+
+## Rate limits
+
+Per-endpoint, with HTTP 429 on exhaustion. Published examples: `/v4/metrics` 10 per 10s, `/v4/metrics/tv` 25 per 10s, `/v4/spots` 150 per 60s, `/v4/brands` 50 per 60s, `/v4/industries` 50 per 300s, `/v4/access` 100 per 900s. Full table: https://developer.ispot.tv/documentation/api/rate-limits — iSpot notes limits may change without notice.
+
+## Data freshness
+
+Airings refresh roughly three times a day (noon, 5PM, midnight PST) and are restated afterwards — re-pull a rolling 30-day window and reconcile with `/v4/airings/updates`. TV airings go back to 2012, impressions to 2016, attention to 2018.
 
 ## Docs
 
-- [Developer Portal](https://developer.ispot.tv/): Documentation, quickstarts, and resources for the iSpot REST API.
-- [API Reference (v4)](https://developer.ispot.tv/api/v4): Reference for the iSpot REST API, including a Python sample and interactive API demo tool.
+- [Developer Portal](https://developer.ispot.tv/)
+- [API Documentation](https://developer.ispot.tv/documentation/api)
+- [Quickstarts](https://developer.ispot.tv/quickstarts/api)
+- [Best Practices — filters & includes](https://developer.ispot.tv/documentation/api/best_practices/filter-includes)
+- [Best Practices — efficient endpoints](https://developer.ispot.tv/documentation/api/best_practices/efficient_endpoints)
+- [Best Practices — data availability](https://developer.ispot.tv/documentation/api/best_practices/data-availability)
+- [Product use cases](https://developer.ispot.tv/documentation/api/product-use-cases)
+- [Python base template](https://developer.ispot.tv/documentation/python/base-template)
+- [Glossary](https://developer.ispot.tv/documentation/glossary)
+- [Rate limits](https://developer.ispot.tv/documentation/api/rate-limits)
+- [Changelog / v4 release notes](https://developer.ispot.tv/releases/api/v4/notes)
+- [Status page](https://status.ispot.tv)
+- [API Reference (credentialed)](https://developer.ispot.tv/api/v4)
+
+## Measurement pixels
+
+- [OTT / Unified Measurement pixel guides](https://developer.ispot.tv/documentation/unified-measurement)
+- [TV Conversion pixel guides](https://developer.ispot.tv/documentation/tv-conversion)
+- Staging host for QA: `https://staging-pi.ispot.tv/v2/{TC-####-#}.gif`
+
+## Not published
+
+iSpot ships no OpenAPI, AsyncAPI, GraphQL schema, MCP server, A2A agent card, `/.well-known/` documents, public SDK package, CLI, Postman collection, webhooks or public pricing. The API reference, the interactive API demo and the Python SDK all sit behind a credentialed developer-site login.
 
 ## Product
 
 - [iSpot.tv](https://www.ispot.tv/): TV and video advertising measurement platform.
-- [Pricing](https://www.ispot.tv/pricing): Plans and pricing.
-- [Request a Demo](https://www.ispot.tv/demo): Book a product demo.
-- [Hub / Blog](https://www.ispot.tv/hub/): Thought leadership, announcements, press, case studies, and industry reports.
+- [Pricing](https://www.ispot.tv/pricing): Contact sales — no published plans.
+- [Request a Demo](https://www.ispot.tv/demo)
+- [Contact / Support](https://www.ispot.tv/contact-us)
+- [Hub / Blog](https://www.ispot.tv/hub/)
+- [GitHub](https://github.com/ispot-tv)
 
 ## Legal & Trust
 
 - [Terms of Use](https://www.ispot.tv/hub/agreements/terms/)
 - [Privacy Policy](https://www.ispot.tv/hub/agreements/privacy/)
 - [Trust Center](https://trust.ispot.tv/)
+- [Security & Privacy documentation](https://developer.ispot.tv/documentation/privacy-security)

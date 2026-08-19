@@ -1,0 +1,83 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.ispot.tv/releases/api/v4/notes
+versioning:
+  scheme: uri-path
+  current: v4
+  current_release: v4.49.3
+  current_release_date: '2025-11-04'
+  path_prefix: /v4
+  header:
+    name: iSpot-Version
+    style: date-stamped
+    response_header: ispot-version
+    response_observed: '2024-09-10'
+  release_numbering: v4.MINOR.PATCH, classed as Minor or Maintenance releases
+  docs: https://developer.ispot.tv/releases/api/v4/notes
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: unknown
+  precedent:
+    version: v3
+    announced_in: https://developer.ispot.tv/sites/default/files/API%20Migration%20Guide_0.pdf
+    sunset_date: '2020-12-31'
+    detail: >-
+      iSpot published a dated v3-to-v4 API Migration Guide naming an explicit
+      deprecation date (Dec 31 2020) and a field-by-field / endpoint-by-endpoint
+      mapping from v3 to v4, including the auth change from HTTP Basic to OAuth
+      2.0 client credentials. That is a real, executed deprecation with notice
+      and a migration path — but it is a one-off artifact, not a standing policy.
+  note: >-
+    iSpot has no published deprecation POLICY (no notice period, no Sunset /
+    Deprecation header commitment, no RFC 8594 support statement). The Deprecation
+    pointer emitted for this provider points at the v3->v4 Migration Guide, the
+    only deprecation document iSpot publishes.
+sla:
+  url: null
+  uptime_target: null
+  note: No public SLA or uptime target is published.
+status_page:
+  url: https://status.ispot.tv
+  provider: Atlassian Statuspage
+  page_id: w4m1jr3ydw5x
+  machine_readable: https://status.ispot.tv/api/v2/summary.json
+  components_observed:
+  - Airings
+  - iSpot Analytics
+  - Media Measurement
+  aliases:
+  - https://ispottv.statuspage.io
+  - https://ispot.statuspage.io
+  verified: probed
+  http_status: 200
+changelog:
+  url: https://developer.ispot.tv/releases/api/v4/notes
+  artifact: changelog/ispottv-changelog.yml
+  earliest_entry: '2022-08-30'
+  latest_entry: '2025-11-04'
+deprecated_operations: []
+deprecated_operations_note: >-
+  No OpenAPI is published, so no per-operation deprecation flags can be derived.
+  The changelog names no deprecated v4 endpoints.
+data_lifecycle:
+  restatement: >-
+    Airings data is restated after publication. iSpot recommends a rolling 30-day
+    re-pull window and provides /v4/airings/updates, which reports additions,
+    corrections and deletions with old and new values.
+  refresh_cadence: 3x daily (approx. noon, 5PM, midnight PST)
+  history_depth:
+    tv_airings_from: '2012'
+    impressions_from: '2016'
+    attention_from: '2018'
+  source: https://developer.ispot.tv/documentation/api/best_practices/data-availability
+x-evidence:
+- url: https://developer.ispot.tv/releases/api/v4/notes
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://status.ispot.tv/api/v2/summary.json
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://developer.ispot.tv/sites/default/files/API%20Migration%20Guide_0.pdf
+  http_status: 200
+  fetched: '2026-08-13'

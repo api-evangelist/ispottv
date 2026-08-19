@@ -1,0 +1,170 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.ispot.tv/documentation/unified-measurement
+also:
+- https://developer.ispot.tv/documentation/tv-conversion
+- https://developer.ispot.tv/sites/default/files/Impression%20Pixel%20Implementation%20Guide_0.pdf
+note: >-
+  iSpot ships no UI widget or element library. Its client-side surface is a
+  measurement tag family — 1x1 invisible GIF pixels embedded in web pages, apps
+  and VAST tags — which is the embeddable, customer-deployed component in this
+  product category. Each family has a client-side (IMG tag) and a server-side
+  (HTTP GET) mode, and a staging build alongside production.
+families:
+- name: Impression Pixel
+  purpose: >-
+    Tracks OTT, CTV, FEP and digital video impressions outside linear TV, so
+    iSpot can associate off-linear media with TV exposure for cross-channel
+    reach, frequency and overlap.
+  type: tracking-pixel
+  format: 1x1 invisible GIF
+  host: https://pi.ispot.tv
+  path: /v2/{pixel_id}.gif
+  pixel_id_format: TC-####-#
+  placement: >-
+    Embedded within the creative or in a VAST (Video Ad Serving Template) tag.
+  client_side_snippet: '<img src="https://pi.ispot.tv/v2/{pixel-id}.gif?" style="border:0" alt="" />'
+  server_side:
+    supported: true
+    method: GET
+    host: https://pi.ispot.tv
+    guide: https://developer.ispot.tv/sites/default/files/iSpot_Server-side_OTT_Integration_Guide.pdf
+    reconstructed_context:
+    - header: X-Forwarded-For
+      purpose: Original client IPv4; left-most entry must be the true client IP.
+    - param: ip
+      purpose: Alternative to X-Forwarded-For for passing the client IPv4.
+    - param: datetime
+      purpose: >-
+        Original UTC visit time (YYYY-MM-DD HH:MM:SS, url-encoded) when the
+        server-side call lags the client visit by more than a few minutes.
+    - header: User-Agent
+      purpose: Re-created browser context.
+  parameters:
+  - name: campaignid
+    type: varchar(64)
+    required: recommended
+    description: Campaign ID from the ad server.
+  - name: channel
+    type: varchar(16)
+    required: recommended
+    description: Marketing channel where the ad is served.
+    examples: [OTT, CTV, FEP, digital, search, social]
+  - name: cid
+    type: varchar(128)
+    required: false
+    description: Third-party audience ID (Adobe, LiveRamp, Neustar, Oracle).
+  - name: creativeid
+    type: varchar(64)
+    required: false
+    description: Creative ID from the ad server.
+  - name: creativename
+    type: varchar(64)
+    required: false
+    description: Creative name.
+  - name: customdata
+    type: varchar(256)
+    required: false
+    description: Custom data about the media; value supplied by the CS representative.
+  - name: devicetype
+    type: varchar(16)
+    required: false
+    description: Device the ad is served on.
+    examples: [Roku, Sling, Xbox, Desktop, Mobile, Cross]
+  - name: placementid
+    type: varchar(64)
+    required: true
+    description: Placement or inventory ID from the ad server.
+  - name: placementtype
+    type: varchar(32)
+    required: false
+    description: Media type.
+    examples: [Display, Video, Banner, skippable, FEP]
+  - name: platform
+    type: varchar(7)
+    required: true
+    case_sensitive: true
+    description: Platform where the ad is served.
+    values: [ott, digital]
+  - name: publisher
+    type: varchar(64)
+    required: true
+    description: Publisher/partner the ad is served on.
+  - name: segment
+    type: varchar(128)
+    required: false
+    description: Targeting segment or demographic info.
+  parameter_rules:
+  - Parameter names are case-sensitive.
+  - Multiple parameters separated by '&'; value follows '=' directly.
+  - Underscores and dashes preferred as word separators.
+  - 'Restricted characters: space & " '' + = / \ < > * ( ) [ ] { } %'
+  - Parameters not in the published table are silently ignored.
+  privacy: >-
+    Any PII passed through a customer-facing field is obfuscated by iSpot.
+  guides:
+  - https://developer.ispot.tv/sites/default/files/OTT%20Pixel%20Implementation%20101_1.pdf
+  - https://developer.ispot.tv/sites/default/files/Impression%20Pixel%20Implementation%20Guide_0.pdf
+- name: TV Conversion Pixel
+  purpose: >-
+    Connects TV ad exposures across iSpot's 8M+ measured TVs with a brand's own
+    first-party website and app events via household IP, producing closed-loop
+    conversion and lift analytics.
+  type: tracking-pixel
+  format: 1x1 invisible GIF
+  host: https://pt.ispot.tv
+  path: /v2/{site_id}.gif
+  site_id_format: >-
+    TC-1234-1 — "TC" for tracking code, "1234" the client account id, "-1" the
+    site identifier, incrementing per site.
+  placement: Web page or app, client-side IMG tag or via a tag manager.
+  server_side:
+    supported: true
+    method: GET
+    guide: https://developer.ispot.tv/sites/default/files/iSpot_Server-side_TVC_Integration_Guide_1.pdf
+    reconstructed_context:
+    - header: X-Forwarded-For
+    - param: ip
+    - param: datetime
+    - header: User-Agent
+    - header: Referer
+  matching: >-
+    IPv4 household matching by default; IPv6 supported via a third-party identity
+    resolution partner. Only client-side IPs may be passed — server-side IPs
+    cannot be matched to a conversion type.
+  related_api: >-
+    The Site ID doubles as the path segment on the read API:
+    /v4/metrics/conversions/{TC-####-#}
+  guides:
+  - https://developer.ispot.tv/sites/default/files/TVC%20Pixel%20Implementation%20101.pdf
+  - https://developer.ispot.tv/sites/default/files/TV%20Conversion%20Integration%20Guide%202023-09-07_0.pdf
+additional_hosts_observed:
+- host: https://ps.ispot.tv
+  path: /v2/{site_id}.gif
+  note: >-
+    Referenced in the server-side OTT guide alongside pi.ispot.tv. Probed live —
+    returns HTTP 200 with content-type application/json rather than image/gif, so
+    it behaves differently from the two GIF endpoints. Its exact role is not
+    documented publicly and is deliberately not guessed.
+  http_status: 200
+integrations_named:
+- name: Google DoubleClick Campaign Manager (DCM)
+  note: A dedicated section of the Impression Pixel guide covers DCM macro trafficking.
+- name: RudderStack webhooks destination
+  note: Referenced in the pixel guide as a server-side delivery path.
+x-evidence:
+- url: https://pi.ispot.tv/v2/TC-0000-1.gif
+  http_status: 200
+  content_type: image/gif
+  fetched: '2026-08-13'
+- url: https://pt.ispot.tv/v2/TC-0000-1.gif
+  http_status: 200
+  content_type: image/gif
+  fetched: '2026-08-13'
+- url: https://ps.ispot.tv/v2/TC-0000-1.gif
+  http_status: 200
+  content_type: application/json
+  fetched: '2026-08-13'
+- url: https://developer.ispot.tv/documentation/unified-measurement
+  http_status: 200
+  fetched: '2026-08-13'

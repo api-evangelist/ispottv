@@ -1,0 +1,76 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.ispot.tv/sites/default/files/Impression%20Pixel%20Implementation%20Guide_0.pdf
+note: >-
+  iSpot publishes no sandbox, test mode or test credentials for the REST API —
+  there is no test/live key separation, no magic test IDs and no fixture tooling.
+  It DOES run a genuine staging environment for the measurement pixel, with a
+  distinct hostname and a documented QA step in the onboarding sequence. Both
+  facts are recorded; neither is extrapolated to the other surface.
+rest_api:
+  sandbox: false
+  test_mode: false
+  test_credentials: false
+  key_prefix_separation: false
+  detail: >-
+    OAuth Client ID/Secret are issued by an account manager against a live
+    account. There is no test-vs-live credential distinction documented anywhere
+    on the public surface, so an integrator's first request runs against
+    production data.
+  interactive_console:
+    url: https://developer.ispot.tv/api/demo
+    name: API demo
+    description: >-
+      "Tests the iSpot API" — an interactive request tool on the developer
+      portal. Credential-gated; probed and returns HTTP 401 with no body.
+    http_status: 401
+    public: false
+pixel_environments:
+  sandbox: true
+  environments:
+  - name: staging
+    host: https://staging-pi.ispot.tv
+    path: /v2/{pixel_id}.gif
+    example_form: '<img src="https://staging-pi.ispot.tv/v2/TC-####-#.gif?" style="border:0" alt="" />'
+    http_status: 200
+    content_type: image/gif
+    verified: probed
+  - name: production
+    host: https://pi.ispot.tv
+    path: /v2/{pixel_id}.gif
+    http_status: 200
+    content_type: image/gif
+    verified: probed
+  separation: >-
+    iSpot states the staging pixels and environment are kept deliberately
+    separate to keep production data clean, and that staging data does NOT appear
+    in the dashboard — it is inspected internally via SQL during the QA step.
+  qa_workflow:
+  - step: 1
+    detail: Client/agency supplies trafficking or conversion-tracking information.
+  - step: 2
+    detail: iSpot creates the pixels; each pixel has a staging and a production version.
+  - step: 3
+    detail: >-
+      Client and publisher/app partners implement the STAGING pixel and test-fire
+      it. iSpot verifies the pixels are placed and firing correctly. Using
+      staging pixels mitigates rework.
+  - step: 4
+    detail: >-
+      Once iSpot confirms staging is correct, partners remove the staging pixels
+      and switch to production; iSpot confirms placement and notifies the client.
+      Data appears in the dashboard shortly after.
+  test_values:
+    published: false
+    note: >-
+      iSpot publishes no magic/test pixel IDs. Every ID is customer-specific
+      (TC-####-#) and issued by a CS representative. No test identifier is
+      invented here.
+x-evidence:
+- url: https://staging-pi.ispot.tv/v2/TC-0000-1.gif
+  http_status: 200
+  content_type: image/gif
+  fetched: '2026-08-13'
+- url: https://developer.ispot.tv/api/demo
+  http_status: 401
+  fetched: '2026-08-13'

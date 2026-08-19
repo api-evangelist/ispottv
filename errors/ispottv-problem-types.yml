@@ -1,0 +1,125 @@
+generated: '2026-08-13'
+method: probed
+source: live unauthenticated probes of https://api.ispot.tv/v4/*
+docs: https://developer.ispot.tv/documentation/glossary
+format: rfc9457
+media_type: application/problem+json
+note: >-
+  iSpot publishes no OpenAPI and no public error reference, but the live API
+  returns RFC 9457 Problem Details on every unauthenticated request. The problem
+  types below were observed directly; the 429 entry is taken from iSpot's
+  published rate-limit page. No error catalog is fabricated — anything reachable
+  only with credentials is recorded as unknown rather than guessed.
+envelope:
+  fields:
+  - name: title
+    description: Human-readable summary of the problem type.
+  - name: type
+    description: >-
+      Problem type identifier. Observed in two forms — a bare slug
+      ("authentication-required", "resource-not-found") on resource endpoints and
+      an absolute URI under http://developer.ispot.tv/api/v4/errors/ on the OAuth
+      token endpoint. The two forms are inconsistent; the bare-slug form is not a
+      dereferenceable URI as RFC 9457 recommends.
+  - name: status
+    description: HTTP status code, duplicated in the body.
+  - name: detail
+    description: >-
+      Explanation. On the token endpoint iSpot puts the request id here rather
+      than a human explanation, which deviates from RFC 9457 semantics.
+  - name: instance
+    description: >-
+      The request identifier, identical to the x-request-id response header.
+problems:
+- status: 401
+  type: authentication-required
+  title: Authentication Required
+  detail: Authentication required.
+  media_type: application/problem+json
+  cause: Request made with no bearer token, or with an expired/invalid token.
+  remediation: >-
+    Mint a token at POST https://api.ispot.tv/v4/oauth2/token with
+    grant_type=client_credentials and send it as 'Authorization: Bearer <token>'.
+    Tokens live 24 hours.
+  observed_on: https://api.ispot.tv/v4/brands
+  method: probed
+- status: 404
+  type: resource-not-found
+  title: Resource Not Found
+  detail: 'No route found for "GET <url>"'
+  media_type: application/problem+json
+  cause: The path does not match any v4 route.
+  remediation: Check the endpoint path against the v4 route list.
+  observed_on: https://api.ispot.tv/v4/openapi.json
+  method: probed
+- status: 400
+  type: http://developer.ispot.tv/api/v4/errors/invalid-request
+  title: >-
+    The request is missing a required parameter, includes an invalid parameter
+    value, includes a parameter more than once, or is otherwise malformed.
+  media_type: application/problem+json
+  cause: >-
+    OAuth 2.0 token request missing client_id / client_secret, or malformed.
+    Wording follows RFC 6749 invalid_request.
+  remediation: >-
+    POST client_id, client_secret and grant_type=client_credentials as
+    application/x-www-form-urlencoded.
+  observed_on: https://api.ispot.tv/v4/oauth2/token
+  method: probed
+- status: 429
+  type: unknown
+  title: Rate limit exceeded
+  cause: >-
+    Per-endpoint request quota exhausted. Limits differ by endpoint family — see
+    rate-limits/ispottv-rate-limits.yml.
+  remediation: >-
+    Back off until the reset window elapses. iSpot documents that three
+    rate-limit headers are returned (limit, remaining, reset seconds) but does
+    not publish their names.
+  source: https://developer.ispot.tv/documentation/api/rate-limits
+  method: searched
+  body_shape: unknown
+  body_shape_note: >-
+    Not observable without credentials; the problem `type` slug for 429 is not
+    published and is deliberately left unknown rather than guessed.
+- status: 503
+  type: unknown
+  title: Service unavailable
+  cause: >-
+    Requests to api.ispot.tv paths outside the /v4 route prefix are answered by
+    the edge with a bare text/plain 503 and no problem+json body — including
+    every /.well-known/* path. This is an edge behaviour, not an API error type.
+  remediation: Use the /v4 path prefix.
+  observed_on: https://api.ispot.tv/
+  method: probed
+historical_defects:
+  note: >-
+    iSpot's public changelog records error-handling fixes that document real past
+    behaviour; recorded here as provenance, not as current contract.
+  entries:
+  - version: v4.28.3
+    date: '2023-04-11'
+    detail: Duplicate opt-out postings would cause 500 errors.
+  - version: v4.28.2
+    date: '2023-04-04'
+    detail: >-
+      A request without a bearer token returned "Error: Call to a member function
+      getAccount() on null" instead of Unauthenticated — since corrected to the
+      401 problem+json above.
+  - version: v4.43.0
+    date: '2025-03-21'
+    detail: Corrected a 500 on the Advanced Audience Segment endpoint.
+  source: https://developer.ispot.tv/releases/api/v4/notes
+x-evidence:
+- url: https://api.ispot.tv/v4/brands
+  http_status: 401
+  content_type: application/problem+json
+  fetched: '2026-08-13'
+- url: https://api.ispot.tv/v4/openapi.json
+  http_status: 404
+  content_type: application/problem+json
+  fetched: '2026-08-13'
+- url: https://api.ispot.tv/v4/oauth2/token
+  http_status: 400
+  content_type: application/problem+json
+  fetched: '2026-08-13'

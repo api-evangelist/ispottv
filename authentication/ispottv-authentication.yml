@@ -1,0 +1,83 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.ispot.tv/documentation/python/base-template
+docs: https://developer.ispot.tv/documentation/glossary
+note: >-
+  iSpot publishes no OpenAPI, so this profile is read from the provider's own
+  public documentation (the Python base-template sample, the API glossary and the
+  publicly served API Integration Guide PDF) and confirmed against live
+  unauthenticated probes of the token and resource endpoints.
+summary:
+  types:
+  - oauth2
+  api_key_in: []
+  oauth2_flows:
+  - clientCredentials
+schemes:
+- name: OAuth2ClientCredentials
+  type: oauth2
+  flow: clientCredentials
+  token_url: https://api.ispot.tv/v4/oauth2/token
+  request_content_type: application/x-www-form-urlencoded
+  parameters:
+  - client_id
+  - client_secret
+  - grant_type
+  grant_type_value: client_credentials
+  token_type: Bearer
+  token_lifetime: 24h
+  token_lifetime_note: >-
+    iSpot documents that a token is valid for 24 hours and asks callers not to
+    mint a new token until the current one has expired.
+  scopes: []
+  scopes_note: >-
+    iSpot publishes no OAuth scope surface. Authorization is account-scoped —
+    access is limited to the brands/industries in the customer's subscription,
+    discoverable at runtime via filter[access]=1 on /v4/brands and /v4/industries
+    rather than through token scopes.
+  credential_issuance: >-
+    Client ID and Client Secret are created by an iSpot account manager /
+    Customer Success representative using internal tooling; there is no
+    self-service credential flow.
+  sources:
+  - https://developer.ispot.tv/documentation/python/base-template
+  - https://developer.ispot.tv/documentation/glossary
+  - https://developer.ispot.tv/sites/default/files/iSpot_API_Integration_Guide_2023-compressed.pdf
+request_authorization:
+  header: Authorization
+  format: 'Bearer <access_token>'
+  additional_headers:
+  - name: iSpot-Version
+    required: false
+    description: >-
+      Date-stamped API version pin. iSpot's own samples send
+      'iSpot-Version: 2017-08-16'; the live API echoes an 'ispot-version'
+      response header (observed value 2024-09-10 on the token endpoint).
+separate_credentials:
+  note: >-
+    iSpot states explicitly that REST API credentials are NOT interchangeable
+    with developer-site credentials or iSpot Analytics Dashboard credentials —
+    three distinct credential sets.
+  source: https://developer.ispot.tv/sites/default/files/iSpot_API_Integration_Guide_2023-compressed.pdf
+pixel_api:
+  note: >-
+    The measurement ingest surface (pi.ispot.tv / pt.ispot.tv) is not
+    OAuth-protected. It authenticates by possession of a client-specific
+    tracking code (Site ID, format TC-####-#) embedded in the request path.
+  source: https://developer.ispot.tv/documentation/unified-measurement
+x-evidence:
+- url: https://api.ispot.tv/v4/oauth2/token
+  method: POST
+  http_status: 400
+  content_type: application/problem+json
+  observed: >-
+    Live OAuth 2.0 token endpoint; an empty client_credentials request returns
+    RFC 9457 problem+json with type
+    http://developer.ispot.tv/api/v4/errors/invalid-request
+  fetched: '2026-08-13'
+- url: https://api.ispot.tv/v4/brands
+  method: GET
+  http_status: 401
+  content_type: application/problem+json
+  observed: '{"title":"Authentication Required","type":"authentication-required","status":401}'
+  fetched: '2026-08-13'

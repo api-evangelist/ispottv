@@ -1,0 +1,181 @@
+generated: '2026-08-13'
+method: searched
+source: https://developer.ispot.tv/releases/api/v4/notes
+api: iSpot REST API v4
+scheme: v4.MINOR.PATCH
+release_classes:
+- Minor release
+- Maintenance release
+current_version: v4.49.3
+current_version_date: '2025-11-04'
+coverage: recent window only; the live page is the source of truth
+note: >-
+  Public, dated, reverse-chronological changelog on iSpot's own developer site.
+  Entries are terse and often say only "Misc Development Improvements"; the ones
+  captured below are the entries that carry an actual API-contract change
+  (endpoints, filters, auth, rate limits, response shape).
+entries:
+- version: v4.49.3
+  date: '2025-11-04'
+  class: maintenance
+  breaking: false
+  highlights:
+  - Minor performance improvements.
+- version: v4.49.0
+  date: '2025-10-10'
+  class: minor
+  breaking: false
+  highlights:
+  - Adjustment to custom reporting.
+- version: v4.48.2
+  date: '2025-09-12'
+  class: maintenance
+  breaking: false
+  highlights:
+  - Fixed an issue with API token structure.
+- version: v4.48.1
+  date: '2025-08-29'
+  class: maintenance
+  breaking: false
+  highlights:
+  - Multiple campaign IDs appearing in params fixed.
+  - OpenAPI annotation comparison endpoint fixed.
+- version: v4.48.0
+  date: '2025-08-22'
+  class: minor
+  breaking: false
+  highlights:
+  - Publisher-vs-publisher advanced audiences made available.
+- version: v4.47.0
+  date: '2025-08-08'
+  class: minor
+  breaking: false
+  highlights:
+  - Caching method changed for performance.
+- version: v4.46.0
+  date: '2025-07-16'
+  class: minor
+  breaking: false
+  additions:
+  - New endpoint filters.
+  highlights:
+  - OAuth fix.
+- version: v4.45.1
+  date: '2025-05-05'
+  class: maintenance
+  breaking: false
+  additions:
+  - Netflix added as an available source.
+- version: v4.44.0
+  date: '2025-04-09'
+  class: minor
+  breaking: false
+  highlights:
+  - Amazon as a source updated to Core24 methodology.
+- version: v4.43.0
+  date: '2025-03-21'
+  class: minor
+  breaking: false
+  highlights:
+  - Metrics call updated to Core24 methodology.
+  - Support added for large DMP segment IDs.
+  - Advanced Audiences now uses Core23 and Core24 methodologies.
+  - Fixed a 500 on the Advanced Audience Segment endpoint.
+- version: v4.42.0
+  date: '2025-02-28'
+  class: minor
+  breaking: false
+  highlights:
+  - Core23 data can now be retrieved.
+- version: v4.41.0
+  date: '2025-02-07'
+  class: minor
+  breaking: true
+  breaking_detail: >-
+    The v4 spots endpoint now returns an object instead of a list of an object —
+    a response-shape change to an existing endpoint.
+- version: v4.40.0
+  date: '2025-02-06'
+  class: minor
+  breaking: false
+  additions:
+  - Publisher-vs-publisher implemented in the API.
+- version: v4.38.0
+  date: '2024-09-06'
+  class: minor
+  breaking: false
+  additions:
+  - Link added for associated CRA data.
+- version: v4.34.0
+  date: '2024-06-06'
+  class: minor
+  breaking: false
+  additions:
+  - /v4/metrics/ott and /v4/metrics/ott/conversions now support filter[spot] and filter[creative].
+- version: v4.33.0
+  date: '2024-02-29'
+  class: maintenance
+  breaking: false
+  additions:
+  - Support for mobile IP measurement.
+- version: v4.31.0
+  date: '2023-12-07'
+  class: minor
+  breaking: false
+  additions:
+  - New Streaming Competitive module — endpoint /v4/metrics/competitive.
+- version: v4.30.0
+  date: '2023-12-05'
+  class: maintenance
+  breaking: false
+  highlights:
+  - OTT conversions deduped when the same media is tagged with different sources.
+- version: v4.29.0
+  date: '2023-10-04'
+  class: minor
+  breaking: false
+  additions:
+  - New Streaming Verification module — endpoint /v4/metrics/verified/audience.
+- version: v4.28.11
+  date: '2023-05-11'
+  class: maintenance
+  breaking: false
+  highlights:
+  - Rate limits increased for the metric, spots and show endpoints.
+- version: v4.28.2
+  date: '2023-04-04'
+  class: maintenance
+  breaking: false
+  highlights:
+  - campaigns/ott date-range filtering fixed.
+  - Unauthenticated requests now return a proper Unauthenticated error instead of a PHP fatal.
+  - metrics/impressions/ott rate limit raised to 50 requests per 60 seconds.
+- version: v4.27.0
+  date: '2023-01-20'
+  class: maintenance
+  breaking: false
+  highlights:
+  - Audience and OTT endpoints can now filter for ages 2+.
+  - For default household filters, impression percentages replaced with counts.
+- version: v4.26.1
+  date: '2022-12-12'
+  class: maintenance
+  breaking: false
+  additions:
+  - Sorting on publisher and impressions for UM Lift — /v4/metrics/conversions/{SITE_ID}/ott/lift/publisher.
+- version: v4.25.7
+  date: '2022-12-05'
+  class: maintenance
+  breaking: false
+  additions:
+  - Dynamic filters on /v4/networks/family/extended (network_family, advertiser_id, start_date, end_date, is_parent).
+- version: v4.25.3
+  date: '2022-10-21'
+  class: maintenance
+  breaking: false
+  additions:
+  - New endpoints /v4/episodes and /v4/episodes/{id}.
+x-evidence:
+- url: https://developer.ispot.tv/releases/api/v4/notes
+  http_status: 200
+  fetched: '2026-08-13'
