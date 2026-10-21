@@ -1,0 +1,15 @@
+generated: '2026-10-20'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/_ae-authored/ispottv-openapi-generated.yml
+vocabulary:
+  name: iSpot.tv Domain Vocabulary
+  description: 'Terms declared by iSpot.tv''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-20'
+  terms:
+  - term: Metrics
+    definition: 'Resource group in the contract; its operation GET /v4/metrics/conversions/[id]: GET /v4/metrics/conversions/[id]'
+    tags:
+    - Resource Group
+    source: openapi/_ae-authored/ispottv-openapi-generated.yml

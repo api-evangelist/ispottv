@@ -1,0 +1,161 @@
+generated: '2026-10-20'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 11
+  own: 8
+  other_domain: 2
+  platform: 1
+  roles:
+  - api
+  - identity
+  - marketing
+  - other
+  - portal
+  - source
+  - status
+  - website
+hosts:
+- host: api.ispot.tv
+  found_by:
+  - apis[]
+  - probed
+  - contract-discovery
+  - well-known
+  types: []
+  serves:
+  - api
+  registrable_domain: ispot.tv
+  role: api
+  relation: own
+- host: api.ispot.tv:443
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: ispot.tv:443
+  role: api
+  relation: other-domain
+- host: developer.ispot.tv
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - site-links
+  - docs-index
+  - contract-discovery
+  - well-known
+  types:
+  - DeveloperPortal
+  - Documentation
+  - APIReference
+  - GettingStarted
+  - ChangeLog
+  serves:
+  - docs
+  registrable_domain: ispot.tv
+  role: portal
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: login.ispot.tv
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - Login
+  serves: []
+  registrable_domain: ispot.tv
+  role: identity
+  relation: own
+- host: pi.ispot.tv
+  found_by:
+  - apis[]
+  - probed
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types: []
+  serves:
+  - api
+  - cdn
+  vendor: fastly
+  registrable_domain: ispot.tv
+  role: other
+  relation: own
+- host: status.ispot.tv
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - StatusPage
+  serves: []
+  registrable_domain: ispot.tv
+  role: status
+  relation: own
+- host: trust.ispot.tv
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - Compliance
+  - TrustCenter
+  serves: []
+  registrable_domain: ispot.tv
+  role: other
+  relation: own
+- host: videos-cdn.ispot.tv
+  found_by:
+  - probed
+  - site-links
+  types: []
+  serves: []
+  registrable_domain: ispot.tv
+  role: other
+  relation: own
+- host: www.ispot.tv
+  found_by:
+  - pointer
+  - probed
+  - well-known
+  - vendor-detect
+  types:
+  - BlogRSS
+  - Website
+  - Support
+  - Pricing
+  - Blog
+  - TermsOfService
+  - PrivacyPolicy
+  serves:
+  - cdn
+  vendor: cloudflare
+  registrable_domain: ispot.tv
+  role: website
+  relation: own
+- host: www.ispot.tv:443
+  found_by:
+  - pointer
+  - probed
+  - contract-discovery
+  - well-known
+  types:
+  - Blog
+  serves: []
+  registrable_domain: ispot.tv:443
+  role: marketing
+  relation: other-domain

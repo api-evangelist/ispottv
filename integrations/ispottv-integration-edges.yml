@@ -1,4 +1,21 @@
-generated: '2026-10-14'
+generated: '2026-10-20'
+method: searched
+source:
+- https://hightouch.com/docs/destinations/ispot-tv
+- https://zapier.com/apps/ispottv/integrations
+- https://zapier.com/apps/ispot-tv/integrations
+- https://n8n.io/integrations/ispottv/
+- https://composio.dev/toolkits/ispottv
+- https://monid.ai/tools/ispottv
+checked:
+- https://hightouch.com/docs/destinations/ispot-tv
+- https://composio.dev/toolkits/ispottv
+- https://monid.ai/tools/ispottv
+- https://n8n.io/integrations/ispottv/
+- https://zapier.com/apps/ispot-tv/integrations
+- https://zapier.com/apps/ispottv/integrations
+summary: null
+marketplace_apps: []
 edges:
 - partner_name: Hightouch
   partner: hightouch
@@ -24,7 +41,4 @@ edges:
       - insert
   detected_by: sweep-cdp.py
   first_seen: '2026-10-14'
-method: searched
-checked:
-- https://hightouch.com/docs/destinations/ispot-tv
-source: https://hightouch.com/docs/destinations/ispot-tv
+templates: []

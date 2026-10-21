@@ -1,6 +1,7 @@
 generated: '2026-08-13'
 method: searched
 source: https://developer.ispot.tv/documentation/api/rate-limits
+name: iSpot.tv API Rate Limits
 also:
 - https://developer.ispot.tv/documentation/api/best_practices/data-availability
 - https://developer.ispot.tv/sites/default/files/iSpot_API_Integration_Guide_2023-compressed.pdf
@@ -8,13 +9,10 @@ api: iSpot REST API v4
 scope: per-endpoint (applied per API client)
 exhaustion_status: 429
 limit_count: 19
-note: >-
-  iSpot publishes a per-endpoint rate-limit table on its public developer site.
-  Two pages carry the table and they DISAGREE on three endpoints — the dedicated
-  /documentation/api/rate-limits page is treated as current and the older
-  data-availability copy (last updated 7/24/2023) is recorded as `variant` so a
-  consumer sees the discrepancy rather than one number presented as certain.
-  iSpot states limits may change without notice.
+note: iSpot publishes a per-endpoint rate-limit table on its public developer site. Two pages carry the table and they DISAGREE
+  on three endpoints — the dedicated /documentation/api/rate-limits page is treated as current and the older data-availability
+  copy (last updated 7/24/2023) is recorded as `variant` so a consumer sees the discrepancy rather than one number presented
+  as certain. iSpot states limits may change without notice.
 response_headers:
   documented: true
   names_published: false
@@ -22,20 +20,27 @@ response_headers:
   - maximum number of requests permitted per minute
   - number of requests remaining in the current rate limit window
   - seconds (UTC) until the current rate limit window resets
-  note: >-
-    iSpot's Integration Guide describes three rate-limit response headers but
-    never names them, and they are not observable on an unauthenticated request
-    (which is rejected at 401 before the limiter reports). An agent cannot bind
-    to the runtime signal without credentials — this is the single biggest
-    agent-readiness gap on this API.
+  note: iSpot's Integration Guide describes three rate-limit response headers but never names them, and they are not observable
+    on an unauthenticated request (which is rejected at 401 before the limiter reports). An agent cannot bind to the runtime
+    signal without credentials — this is the single biggest agent-readiness gap on this API.
   retry_after: unknown
 limits:
 - endpoint: /v4/access
   limit: 100
   window_seconds: 900
+  name: /v4/access
+  max: 100
+  window: 900 seconds
+  scope: per-endpoint
+  limit_text: '/v4/access, limit: 100, period: 900'
 - endpoint: /v4/account
   limit: 100
   window_seconds: 900
+  name: /v4/account
+  max: 100
+  window: 900 seconds
+  scope: per-endpoint
+  limit_text: '/v4/account, limit: 100, period: 900'
 - endpoint: /v4/airings
   limit: 1000
   window_seconds: 60
@@ -43,56 +48,127 @@ limits:
     limit: 50
     window_seconds: 60
     source: https://developer.ispot.tv/documentation/api/best_practices/data-availability
+  name: /v4/airings
+  max: 1000
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/airings, limit: 1000, period: 60'
 - endpoint: /v4/brands
   limit: 50
   window_seconds: 60
+  name: /v4/brands
+  max: 50
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/brands, limit: 50, period: 60'
 - endpoint: /v4/celebrities
   limit: 50
   window_seconds: 60
+  name: /v4/celebrities
+  max: 50
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/celebrities, limit: 50, period: 60'
 - endpoint: /v4/events
   limit: 50
   window_seconds: 60
+  name: /v4/events
+  max: 50
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/events, limit: 50, period: 60'
 - endpoint: /v4/industries
   limit: 50
   window_seconds: 300
+  name: /v4/industries
+  max: 50
+  window: 300 seconds
+  scope: per-endpoint
+  limit_text: '/v4/industries, limit: 50, period: 300'
 - endpoint: /v4/metrics
   limit: 10
   window_seconds: 10
+  name: /v4/metrics
+  max: 10
+  window: 10 seconds
+  scope: per-endpoint
+  limit_text: '/v4/metrics, limit: 10, period: 10'
 - endpoint: /v4/metrics/tv
   limit: 25
   window_seconds: 10
+  name: /v4/metrics/tv
+  max: 25
+  window: 10 seconds
+  scope: per-endpoint
+  limit_text: '/v4/metrics/tv, limit: 25, period: 10'
 - endpoint: /v4/metrics/audience/airings
   limit: 25
   window_seconds: 10
+  name: /v4/metrics/audience/airings
+  max: 25
+  window: 10 seconds
+  scope: per-endpoint
+  limit_text: '/v4/metrics/audience/airings, limit: 25, period: 10'
 - endpoint: /v4/metrics/tv/airings
   limit: 50
   window_seconds: 60
   source: https://developer.ispot.tv/documentation/api/best_practices/data-availability
-  note: >-
-    Present on the data-availability copy of the table only; absent from the
-    current rate-limits page.
+  note: Present on the data-availability copy of the table only; absent from the current rate-limits page.
+  name: /v4/metrics/tv/airings
+  max: 50
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: 'v4/metrics/tv/airings, limit: 50, period: 60'
 - endpoint: /v4/metrics/impressions/ott
   limit: 50
   window_seconds: 60
   source: https://developer.ispot.tv/documentation/api/best_practices/data-availability
-  note: >-
-    Raised to 50/60s in release v4.28.2 (2023-04-04). Absent from the current
-    rate-limits page.
+  note: Raised to 50/60s in release v4.28.2 (2023-04-04). Absent from the current rate-limits page.
+  name: /v4/metrics/impressions/ott
+  max: 50
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: 'v4/metrics/impressions/ott, limit: 50, period: 60'
 - endpoint: /v4/movies
   limit: 50
   window_seconds: 60
+  name: /v4/movies
+  max: 50
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/movies, limit: 50, period: 60'
 - endpoint: /v4/networks
   limit: 50
   window_seconds: 60
+  name: /v4/networks
+  max: 50
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/networks, limit: 50, period: 60'
 - endpoint: /v4/notifications
   limit: 100
   window_seconds: 60
+  name: /v4/notifications
+  max: 100
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/notifications, limit: 100, period: 60'
 - endpoint: /v4/product-categories
   limit: 50
   window_seconds: 60
+  name: /v4/product-categories
+  max: 50
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/product-categories, limit: 50, period: 60'
 - endpoint: /v4/products
   limit: 50
   window_seconds: 60
+  name: /v4/products
+  max: 50
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/products, limit: 50, period: 60'
 - endpoint: /v4/shows
   limit: 100
   window_seconds: 60
@@ -100,6 +176,11 @@ limits:
     limit: 50
     window_seconds: 60
     source: https://developer.ispot.tv/documentation/api/best_practices/data-availability
+  name: /v4/shows
+  max: 100
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/shows, limit: 100, period: 60'
 - endpoint: /v4/spots
   limit: 150
   window_seconds: 60
@@ -107,12 +188,27 @@ limits:
     limit: 50
     window_seconds: 60
     source: https://developer.ispot.tv/documentation/api/best_practices/data-availability
+  name: /v4/spots
+  max: 150
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/spots, limit: 150, period: 60'
 - endpoint: /v4/users
   limit: 50
   window_seconds: 60
+  name: /v4/users
+  max: 50
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/users, limit: 50, period: 60'
 - endpoint: /v4/planning
   limit: 50
   window_seconds: 60
+  name: /v4/planning
+  max: 50
+  window: 60 seconds
+  scope: per-endpoint
+  limit_text: '/v4/planning, limit: 50, period: 60'
 payload_limits:
   page_size_default: 100
   page_size_max: 1000

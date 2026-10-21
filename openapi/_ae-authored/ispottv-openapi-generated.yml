@@ -1,0 +1,53 @@
+openapi: 3.1.0
+info:
+  title: iSpot.tv API
+  version: '2026-10-20'
+  description: 'GENERATED FROM DOCUMENTATION by API Evangelist on 2026-10-20: 1 operation(s) read from 1 public documentation page(s) (each operation
+    names its page in x-source). This is not the provider''s published contract; iSpot.tv has published no machine-readable contract that the
+    pipeline could find. Engine: anthropic.'
+  x-evidence-tiers:
+    code-example: 1
+    documentation: 0
+    pages-with-code: 1
+    pages-read: 1
+  x-generated-from: documentation
+  x-provenance: generated
+  x-authored-by: API Evangelist
+  x-generated: '2026-10-20'
+  x-generator: generate-contract-from-docs.py
+  x-engine: anthropic
+  x-sources:
+  - https://developer.ispot.tv/documentation/glossary
+servers:
+- url: https://api.ispot.tv
+paths:
+  /v4/metrics/conversions/[id]:
+    get:
+      operationId: get_v4_metrics_conversions_id
+      tags:
+      - Metrics
+      summary: GET /v4/metrics/conversions/[id]
+      x-source: https://developer.ispot.tv/documentation/glossary
+      responses:
+        '200':
+          description: Success (status as documented)
+      x-evidence:
+        kind: code-example
+        language: curl
+        snippet: "curl, Postman, and Insomnia that you can use to make requests to the iSpot REST API.\n HTTP status codes \n REST APIs use the\
+          \ Status-Line part of an HTTP response message to inform clients of their request’s overarching result. HTTP defines 40 standard status\
+          \ codes to convey the client request results. The status codes are divided into the five categories: 1xx: Informational, 2xx: Success,\
+          \ 3xx: Redi"
+tags:
+- name: Metrics
+components:
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://api.ispot.tv/v4/oauth2/token
+          scopes: {}
+      x-source: https://developer.ispot.tv/documentation/python/base-template
+security:
+- OAuth2ClientCredentials: []
