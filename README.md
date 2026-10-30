@@ -64,6 +64,126 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-iSpot.tv is a company surfaced as a portfolio company of insight-partners and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+iSpot.tv is a TV and video advertising measurement company that provides end-to-end measurement unifying creative assessment, audience measurement, and outcome attribution across linear TV and streaming. Its platform draws on data from tens of millions of smart TVs and set-top boxes to track ad occurrences, impressions, share of voice, creative effectiveness, and return on ad spend for advertisers, agencies, and networks. iSpot exposes its data programmatically through the iSpot REST API (v4), documented at a dedicated developer portal with quickstarts, an API reference, a Python sample, an interactive API demo tool, and release notes. iSpot.tv is backed by Insight Partners and was added to the API Evangelist network from that portfolio.
 
-Backed by: insight-partners — http://www.ispot.tv/
+**Areas:** Company · TV Advertising · Advertising Measurement · Analytics · Attribution · Media · Marketing · Streaming
+
+## iSpot.tv on APIs.io
+
+Everything profiled for iSpot.tv is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/ispottv/](https://apis.io/providers/ispottv/)** — or go straight to one of the APIs or properties below.
+
+### APIs (3)
+
+- [iSpot REST API v4](https://apis.io/apis/ispottv/ispot-rest-api-v4/) — REST API for accessing iSpot.tv TV and video ad measurement data — airing occurrence, estimated spend, household and person-level impressions, attention…
+- [iSpot Impression & TV Conversion Pixel API v2](https://apis.io/apis/ispottv/ispot-impression-tv-conversion-pixel-api-v2/) — Server-side and client-side measurement ingest endpoints. A 1x1 GIF pixel accepts OTT/CTV/digital impression events (pi.ispot.tv) and TV conversion events…
+- [iSpot.tv API](https://apis.io/apis/ispottv/ispottv-api/) — iSpot.tv API as documented publicly: 1 operations. Contract generated from the documentation by API Evangelist (2026-10-20); not the provider's own document.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [iSpot.tv API Rules](https://apis.io/rules/ispottv/ispottv-rules/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Ispottv Authentication](https://apis.io/security/ispottv/ispottv-authentication/)
+- [Ispottv Domain Security](https://apis.io/security/ispottv/ispottv-domain-security/)
+- [Ispottv Trust Center](https://apis.io/security/ispottv/ispottv-trust-center/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Ispottv Scopes](https://apis.io/scopes/ispottv/ispottv-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Ispottv Plans Pricing](https://apis.io/plans/ispottv/ispottv-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Ispottv Rate Limits](https://apis.io/rate-limits/ispottv/ispottv-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](http://www.ispot.tv/)
+- [Documentation](https://developer.ispot.tv/documentation/api)
+- [Getting started](https://developer.ispot.tv/quickstarts/api)
+- [API reference](https://developer.ispot.tv/api/v4)
+- [Pricing](https://www.ispot.tv/pricing)
+- [Support](https://www.ispot.tv/contact-us)
+- [Changelog](https://developer.ispot.tv/releases/api/v4/notes)
+- [Blog](https://www.ispot.tv:443/hub/)
+- [Compliance](https://trust.ispot.tv/)
+- [Trust centre](https://trust.ispot.tv/)
+- [Terms of service](https://www.ispot.tv/hub/agreements/terms/)
+- [Privacy policy](https://www.ispot.tv/hub/agreements/privacy/)
+- [GitHub](https://github.com/ispot-tv)
+- [Status](https://status.ispot.tv)
+
+## API Evangelist rating
+
+**Kin Score 51.0** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 78.6 |
+| Contract quality | 11.2 |
+| Contract governance | 35.6 |
+| Operational transparency | 73.7 |
+| Developer ergonomics | 60.7 |
+| Access clarity | 53.9 |
+
+**Agent readiness 20.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | negotiable (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 39.2** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/ispottv/](https://apis.io/providers/ispottv/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for iSpot.tv: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/ispottv/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
